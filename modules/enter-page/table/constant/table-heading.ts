@@ -1,0 +1,1 @@
+export const tableHeading:string[]  = ["Invoice","Status","Method","Amount"];
