@@ -1,7 +1,6 @@
 import { TableWrapper } from "./table/table-wrapper"
-import { Button } from "@/shared/shad-cn/button"
-import { DialogWrapper } from "./dialog-button/dialog-wrapper"
-import { DialogSortingModalWrapper } from "./dialog-button/dialog-sorting-mode-wrapper"
+import { DialogWrapper } from "./dialogs/dialog-product-wrapper"
+import { DialogSortingModalWrapper } from "./dialogs/dialog-sorting-mode-wrapper"
 
 export function ProductViewListPage() {
     return (

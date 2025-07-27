@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/shared/shad-cn/dialog"
 import { CardDemo } from "./components/open-ui-modal"
-
+import ProductCardForm from "./components/open-ui-modal"
 export function DialogWrapper() {
   return (
     <div className="flex items-center justify-center bg-muted/30 dark:bg-background">
@@ -45,7 +45,7 @@ export function DialogWrapper() {
               Product card Modal 
           </DialogTitle>
           </DialogHeader>
-          <CardDemo/>
+          <ProductCardForm/>
         </DialogContent>
       </Dialog>
     </div>
