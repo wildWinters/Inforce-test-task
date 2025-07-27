@@ -1,16 +1,15 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/shared/shad-cn/dialog"
-import { CardDemo } from "./components/open-ui-modal"
+import { Button } from "@/shared/shad-cn/button"
 
-export function DialogWrapper() {
+export function DialogSortingModalWrapper() {
   return (
-    <div className="flex items-center justify-center bg-muted/30 dark:bg-background">
+    <div className="flex items-center justify-center  dark:bg-background p-4">
       <Dialog>
         <DialogTrigger asChild>
           <button
@@ -26,7 +25,7 @@ export function DialogWrapper() {
               focus-visible:ring-4 focus-visible:ring-indigo-500/30
             "
           >
-            Add Product
+            Choose Sort Mode
           </button>
         </DialogTrigger>
 
@@ -41,11 +40,19 @@ export function DialogWrapper() {
           "
         >
           <DialogHeader className="space-y-3">
-          <DialogTitle className="text-center text-2xl font-bold tracking-tight">
-              Product card Modal 
-          </DialogTitle>
+            <DialogTitle className="text-center text-2xl font-bold tracking-tight">
+              Choose Sort Mode
+            </DialogTitle>
           </DialogHeader>
-          <CardDemo/>
+
+          <div className="mt-6 flex justify-center gap-6">
+            <Button className="px-6 py-2 text-lg font-semibold">
+              ASC Sorting
+            </Button>
+            <Button className="px-6 py-2 text-lg font-semibold">
+              Desc Sorting
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
