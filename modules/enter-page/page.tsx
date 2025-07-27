@@ -1,6 +1,6 @@
 import { TableWrapper } from "./table/table-wrapper"
-import { DialogWrapper } from "./dialogs/dialog-product-wrapper"
-import { DialogSortingModalWrapper } from "./dialogs/dialog-sorting-mode-wrapper"
+import { DialogWrapper } from "./dialogs/components/dialog-product-wrapper"
+import { DialogSortingModalWrapper } from "./dialogs/components/dialog-sorting-mode-wrapper"
 
 export function ProductViewListPage() {
     return (

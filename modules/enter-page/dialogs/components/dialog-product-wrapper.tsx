@@ -6,8 +6,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/shad-cn/dialog"
-import { CardDemo } from "./components/open-ui-modal"
-import ProductCardForm from "./components/open-ui-modal"
+import ProductCardForm from "./open-ui-modal"
+
 export function DialogWrapper() {
   return (
     <div className="flex items-center justify-center bg-muted/30 dark:bg-background">
