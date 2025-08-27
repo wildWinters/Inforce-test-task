@@ -6,14 +6,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/shad-cn/dialog"
-import ProductCardForm from "./open-ui-modal"
 
+import ProductCardForm from "./open-ui-modal"
+import { Button } from "@/shared/shad-cn/button"
 export function DialogWrapper() {
   return (
     <div className="flex items-center justify-center bg-muted/30 dark:bg-background">
       <Dialog>
         <DialogTrigger asChild>
-          <button
+          <Button
             className="
               inline-flex items-center justify-center gap-2
               rounded-xl px-5 py-2.5
@@ -27,7 +28,7 @@ export function DialogWrapper() {
             "
           >
             Add Product
-          </button>
+          </Button>
         </DialogTrigger>
 
         <DialogContent

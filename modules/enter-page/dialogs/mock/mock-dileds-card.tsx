@@ -1,7 +1,8 @@
 import { Path } from "react-hook-form";
+import { TProduct } from "../../table/types/t-product";
 
 type SimpleField = {
-  name: Path<Product>;
+  name: Path<TProduct>;
   label: string;
   placeholder?: string;
   type: "text" | "url" | "number";
@@ -9,7 +10,7 @@ type SimpleField = {
 };
   
 export const fields: SimpleField[] = [
-  { name: "id", label: "ID", placeholder: "product-1", type: "text",  },
+  { name: "id", label: "ID", placeholder: "product-1", type: "text",},
   { name: "imageUrl", label: "Image URL", placeholder: "https://...", type: "url",  },
   { name: "name", label: "Name", placeholder: "Product name", type: "text", },
   { name: "count", label: "Count", placeholder: "0", type: "number" },

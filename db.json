@@ -1,56 +1,27 @@
 {
   "products": [
     {
-      "id": "1",
-      "imageUrl": "https://via.placeholder.com/150",
-      "name": "Apple",
-      "count": 10,
-      "size": {
-        "width": 100,
-        "height": 100
-      },
-      "weight": "150g",
-      "comments": [
-        1,
-        2
-      ]
-    },
-    {
-      "id": "2",
-      "imageUrl": "https://via.placeholder.com/150",
-      "name": "Banana",
-      "count": 15,
-      "size": {
-        "width": 120,
-        "height": 80
-      },
-      "weight": "120g",
-      "comments": [
-        3
-      ]
-    },
-    {
       "id": "3",
       "imageUrl": "https://via.placeholder.com/150",
-      "name": "Carrot",
-      "count": 7,
+      "name": "Cherry",
+      "count": 30,
       "size": {
-        "width": 80,
-        "height": 150
+        "width": 30,
+        "height": 30
       },
-      "weight": "100g",
+      "weight": "10g",
       "comments": []
     },
     {
       "id": "4",
       "imageUrl": "https://via.placeholder.com/150",
-      "name": "Dates",
+      "name": "Date",
       "count": 20,
       "size": {
-        "width": 90,
-        "height": 90
+        "width": 40,
+        "height": 40
       },
-      "weight": "200g",
+      "weight": "50g",
       "comments": [
         4
       ]
@@ -58,50 +29,23 @@
     {
       "id": "5",
       "imageUrl": "https://via.placeholder.com/150",
-      "name": "Eggplant",
-      "count": 5,
+      "name": "Elderberry",
+      "count": 12,
       "size": {
-        "width": 150,
-        "height": 200
+        "width": 55,
+        "height": 55
       },
-      "weight": "300g",
+      "weight": "70g",
       "comments": []
     },
     {
-      "id": "6",
-      "imageUrl": "https://via.placeholder.com/150",
-      "name": "Fig",
-      "count": 8,
+      "id": "2123123",
+      "imageUrl": "https:// hello world1",
+      "name": "3123",
+      "count": 123123,
       "size": {
-        "width": 70,
-        "height": 70
-      },
-      "weight": "80g",
-      "comments": [
-        5,
-        6
-      ]
-    },
-    {
-      "id": "7",
-      "imageUrl": "https://via.placeholder.com/150",
-      "name": "Grapes",
-      "count": 25,
-      "size": {
-        "width": 120,
-        "height": 120
-      },
-      "weight": "500g",
-      "comments": []
-    },
-    {
-      "id": "8",
-      "imageUrl": "https://keys",
-      "name": "createdProduct from form ",
-      "count": 200,
-      "size": {
-        "width": 5,
-        "height": 7
+        "width": 1123132,
+        "height": 112312
       },
       "warnings": []
     }

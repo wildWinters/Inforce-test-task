@@ -16,7 +16,7 @@ import { fields } from "../mock/mock-dileds-card";
 import { useProductForm } from "../hooks/use-product-form";
 import { useProductCardForm } from "../hooks/use-product-card-form"; // наш винесений хук
 
-function FormFieldMapper({ control }: { control: ReturnType<typeof useProductForm>["control"] }) {
+export function FormFieldMapper({ control }: { control: ReturnType<typeof useProductForm>["control"] }) {
   return (
     <>
       {fields.map(({ name, label, placeholder, type, description }) => (
