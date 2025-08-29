@@ -8,7 +8,7 @@ const PORT = 3001;
 app.use(express.json());
 app.use(cors());
 
-// Функція для зчитування даних з файлу
+
 const getDatabase = () => {
   const rawData = fs.readFileSync("./database.json");
   return JSON.parse(rawData);

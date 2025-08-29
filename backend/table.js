@@ -61,16 +61,16 @@
   
   app.get('/products/sort', async (req, res) => {
     const { field, order, mode } = req.query;
-
+  
     if (!field || typeof field !== 'string') {
       return res.status(400).json({ error: 'Field query parameter is required' });
     }
-
+  
     const dir = String((order || mode || 'asc')).toLowerCase();
     if (dir !== 'asc' && dir !== 'desc') {
       return res.status(400).json({ error: 'Order/mode must be "asc" or "desc"' });
     }
-
+  
     const getByPath = (obj, path) => {
       try {
         return path.split('.').reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
@@ -78,44 +78,53 @@
         return undefined;
       }
     };
-
+  
     try {
       const raw = await readFile(dbPath, 'utf-8');
       const db = JSON.parse(raw);
       const products = Array.isArray(db.products) ? db.products : [];
-
+      const comments = Array.isArray(db.comments) ? db.comments : [];
+  
+      // Сортування продуктів
       const sorted = [...products].sort((a, b) => {
         const valA = getByPath(a, field);
         const valB = getByPath(b, field);
-
-        // Undefined/null handling: undefined always goes last in asc, first in desc
+  
         const aU = valA === undefined || valA === null;
         const bU = valB === undefined || valB === null;
         if (aU && bU) return 0;
         if (aU) return dir === 'asc' ? 1 : -1;
         if (bU) return dir === 'asc' ? -1 : 1;
-
+  
         const numA = Number(valA);
         const numB = Number(valB);
-        const bothNumeric = Number.isFinite(numA) && Number.isFinite(numB);
-
-        if (bothNumeric) {
+        if (Number.isFinite(numA) && Number.isFinite(numB)) {
           return dir === 'asc' ? numA - numB : numB - numA;
         }
-
+  
         const strA = String(valA).toLowerCase();
         const strB = String(valB).toLowerCase();
         if (strA < strB) return dir === 'asc' ? -1 : 1;
         if (strA > strB) return dir === 'asc' ? 1 : -1;
         return 0;
       });
-
-      res.json(sorted);
+  
+      // Додаємо коментарі до продуктів
+      const withComments = sorted.map(product => {
+        const productComments = comments.find(c => String(c.id) === String(product.id));
+        return {
+          ...product,
+          comments: productComments?.comments || []
+        };
+      });
+  
+      res.json(withComments);
     } catch (err) {
       console.error('Sort products error:', err);
       res.status(500).json({ error: 'Failed to sort products' });
     }
   });
+  
   
 
 app.post('/comments', async (req, res) => {
@@ -232,7 +241,7 @@ app.delete('/comments/:id/:index', async (req, res) => {
   
       await writeFile(dbPath, JSON.stringify({ ...db, products }, null, 2), 'utf-8');
   
-      let updatedFieldValue: number;
+      let updatedFieldValue;
       if (updates.size) {
         const key = Object.keys(updates.size)[0];
         updatedFieldValue = updatedProduct.size[key];

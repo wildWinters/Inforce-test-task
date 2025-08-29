@@ -45,11 +45,11 @@ export function TableWrapper() {
       const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
       const [result] = await Promise.all([
         kyInstance.get(`products/sort?field=${sortField}&order=${sortOrder}`).json<TProduct[]>(),
-        sleep(2000),
       ]);
       return result;
     },
   });
+  console.log(data);
 
   useEffect(() => {
     if (data) {
