@@ -11,11 +11,10 @@ import { Button } from "@/shared/shad-cn/button";
 import { Textarea } from "@/shared/shad-cn/textarea";
 import { kyInstance } from "@/shared/lib/ky";
 import { Pen, Trash2, Triangle, View } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { cn } from "@/shared/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ITableCardWrapperProps } from "./types/i-table-card-wrapper-props";
-
 
 export function TableCardWrapper({
   id,
@@ -26,6 +25,7 @@ export function TableCardWrapper({
 }: ITableCardWrapperProps) {
   const queryClient = useQueryClient();
   const tanstackKey = "comments";
+
   const { data } = useQuery({
     queryKey: [tanstackKey, id],
     queryFn: () => kyInstance.get(`comments/${id}`).json(),
@@ -73,14 +73,14 @@ export function TableCardWrapper({
         <CardTitle className="mx-auto text-lg font-bold text-center">{name}</CardTitle>
         <CardDescription
           className={cn(
-            "mt-2 flex justify-between text-sm text-gray-600 gap-2 flex-wrap",
-            activateMode === "on" ? "flex-col items-center justify-center w-full" : "flex"
+            "mt-2 mx-auto flex justify-between text-sm text-gray-600 gap-2 flex-wrap",
+            activateMode === "on" ? "flex-col items-center justify-center w-full" : "flex items-center justify-center"
           )}
         >
-          <RespondProductData id={id} label="Count" value={`${count}`} editMode={activateMode === "on"} field="count" />
-          <RespondProductData id={id} label="Width" value={`${size.width}`} editMode={activateMode === "on"} field="width" />
-          <RespondProductData id={id} label="Height" value={`${size.height}`} editMode={activateMode === "on"} field="height" />
-          <RespondProductData id={id} label="Weight" value={`${weight}`} editMode={activateMode === "on"} field="weight" />
+          <RespondProductData id={id} label="Count" value={count} editMode={activateMode === "on"} field="count" />
+          <RespondProductData id={id} label="Width" value={size.width} editMode={activateMode === "on"} field="width" />
+          <RespondProductData id={id} label="Height" value={size.height} editMode={activateMode === "on"} field="height" />
+          <RespondProductData id={id} label="Weight" value={weight} editMode={activateMode === "on"} field="weight" />
         </CardDescription>
       </CardHeader>
 
@@ -129,41 +129,35 @@ export function RespondProductData({
 }: {
   id: string | number;
   label: string;
-  value: string;
+  value: number;
   editMode: boolean;
   field: "count" | "width" | "height" | "weight";
 }) {
-  const [data, setData] = useState<number>(Number(removeLetters(value)));
+  const queryClient = useQueryClient();
+  const [data, setData] = useState<number>(value);
+
+ 
+  useEffect(() => {
+    setData(value);
+  }, [value]);
 
   const handleUpdateBackend = (newValue: number) => {
     let payload: any = {};
-
     if (field === "width" || field === "height") {
       payload = { size: { [field]: newValue } };
     } else {
       payload = { [field]: newValue };
     }
 
-    kyInstance.patch(`products/${id}`, { json: payload }).then((data) => { 
-      setData(data)
-    })
+    kyInstance.patch(`products/${id}`, { json: payload }).then(() => {
+      queryClient.invalidateQueries({ queryKey: ["products"] }); 
+    });
+
+    setData(newValue);
   };
 
-  const handleIncrement = () => {
-    const next = data + 1;
-    setData(next);
-    handleUpdateBackend(next);
-  };
-
-  const handleDecrement = () => {
-    const next = data - 1;
-    setData(next);
-    handleUpdateBackend(next);
-  };
-
-  function removeLetters(str: string): string {
-    return str.replace(/[^\d]/g, "");
-  }
+  const handleIncrement = () => handleUpdateBackend(data + 1);
+  const handleDecrement = () => handleUpdateBackend(data - 1);
 
   return (
     <div className="flex items-center gap-1 min-w-[60px] gap-[10px]">

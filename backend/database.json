@@ -4,12 +4,12 @@
       "id": "3",
       "imageUrl": "https://via.placeholder.com/150",
       "name": "Cherry",
-      "count": 50,
+      "count": 47,
       "size": {
-        "width": 50,
-        "height": 50
+        "width": 63,
+        "height": 63
       },
-      "weight": 50,
+      "weight": 63,
       "width": 36,
       "height": 50
     },
@@ -17,7 +17,7 @@
       "id": "4",
       "imageUrl": "https://via.placeholder.com/150",
       "name": "Date",
-      "count": 20,
+      "count": 24,
       "size": {
         "width": 40,
         "height": 40
@@ -60,17 +60,6 @@
       "weight": "5g"
     },
     {
-      "id": "8",
-      "imageUrl": "https://via.placeholder.com/150",
-      "name": "Honeydew",
-      "count": 16,
-      "size": {
-        "width": 45,
-        "height": 45
-      },
-      "weight": "150g"
-    },
-    {
       "id": "9",
       "imageUrl": "https://via.placeholder.com/150",
       "name": "Indian Fig",
@@ -85,7 +74,7 @@
       "id": "10",
       "imageUrl": "https://via.placeholder.com/150",
       "name": "Jackfruit",
-      "count": 13,
+      "count": 16,
       "size": {
         "width": 60,
         "height": 60
@@ -132,10 +121,9 @@
     {
       "id": "8",
       "comments": [
-        "Fresh and tasty apples!",
         "Great for pies."
       ],
-      "date": "14:50 26.08.2021"
+      "date": "2025-08-29T09:19:00.368Z"
     },
     {
       "id": "10",

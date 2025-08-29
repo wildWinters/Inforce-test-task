@@ -1,0 +1,147 @@
+# Inforce test task - Developer Onboarding Guide
+Table of Contents
+
+- 1. Introduction
+- 2. Project Structure
+- 3. Technology Stack
+- 4. Development Setup
+- 5. Installation and Run
+- 6. Problems
+
+## 1. Introduction
+
+Welcome to the Inforce test task project! This comprehensive guide will walk you through everything you need to know about this Next.js app — from understanding what we’re building to setting up your development environment and contributing to the project.
+This document is designed to be your go-to resource to get up to speed quickly.
+
+## 2. Project Structure
+Git
+  For commits, we use the default Git flow.
+  For branch naming, we follow the next naming convention.
+
+  Git branches: 
+  dev
+  all-pages
+  page/name-from-figma
+
+frontend/    
+  modules/
+    page-name/
+      section-of-widgets-ui-name/       # Folder for a specific section (optional)
+        components/                     # UI components
+          element-name.tsx
+          ...
+          handlers/                     # Event handlers
+           handler-name.ts
+           ...
+        hooks/                          # Custom hooks
+          use-element-name.ts
+          ...
+        api/                            # API calls
+          api-function-name.ts
+          ...
+        constants/                      # Constant values
+          const-name.ts
+          ...
+        mock/                           # Mock data
+          mock-name.ts
+          ...
+        models/                         # Data models
+          model-name.ts
+          ...
+        types/                          # Type definitions and interfaces
+          t-name.ts
+          i-name.ts
+          ...
+        store/                          # Zustand or other state management stores
+          store-name-store.ts
+          model-name-store.ts
+          initial-data-store.ts
+          ...
+        general-component-wrapper.tsx   # Generic/reusable wrappers
+      page.tsx                          # Page entry point
+
+  shared/
+    shad-cn/                            # Shared UI components (ShadCN-based)
+      component-of-shad-cn.tsx
+      ...
+    lib/                                # Shared libraries/utilities
+      ...
+    store/                              # Global state management stores
+      store-name-store.ts
+      model-name-store.ts
+      initial-data-store.ts
+      ...
+    utils/                               # Utility functions
+      utils-name.ts
+      ...
+    another-default-folder/
+      etc... 
+
+
+
+## 3. Technology Stack
+### Core Technologies
+ Next.js ~15.x
+ Node.js ~18
+ TypeScript ~5
+ Express ~5
+
+State management:
+- Zustand
+
+Validation:
+- react-hook-form
+- Zod
+
+#### Development Tools
+- ESLint — Code linting
+- Prettier — Code formatting
+
+## 4. Development Setup
+### Installation and Environment Setup
+
+
+```bash
+# Install Node.js (using nvm recommended)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+nvm install 18.16.0
+nvm use 18.16.0
+```
+
+Frontend:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend .env example:
+```env
+PORT=3001
+```
+
+Backend:
+```bash
+cd backend
+npm install
+nodemon table
+nodemon sort
+```
+
+Backend .env example:
+```env
+PORT=3001
+```
+
+## 5. Installation and Run
+- Frontend: from `frontend/` run `npm run dev` (defaults to http://localhost:3000)
+- Backend: from `backend/` run `nodemon table` and `nodemon sort` in separate terminals (listens on PORT from `.env`, e.g., 3001)
+
+## 6. Problems
+If you have any problems setting up this project, please describe them here:
+
+- Problem 1: ...
+- Problem 2: ...
+- Problem 3: ...
+
+etc.

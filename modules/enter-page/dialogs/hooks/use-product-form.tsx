@@ -7,7 +7,6 @@ export function useProductForm() {
   return useForm<Product>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
-      id: "",
       imageUrl: "",
       name: "",
       count: 0,

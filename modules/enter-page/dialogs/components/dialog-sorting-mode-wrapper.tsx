@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Dialog,
   DialogContent,
@@ -16,17 +15,17 @@ import { cn } from "@/shared/lib/utils";
 import { twButtonChoseSortModeOpenDialog } from "../constant/tailwind/const-tw-button-chose-sort-mode-open-dialog";
 import { kyInstance3001 } from "@/shared/lib/ky-3001";
 import { sortOptions } from "../mock/mock-sort-options";
+import { useMemo } from "react";
+import { useCallback } from "react";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 export function DialogSortingModalWrapper() {
   const updateTableRenderData = useTableStore((state) => state.updateTableRenderData);
   const tableRenderData = useTableStore((state) => state.tableRenderData);
-
-  const handleClickSortingMode = (
-    sortField: "count" | "name",
-    sortOrder: "asc" | "desc"
-  ): void => {
+  
+  const handleClickSortingMode = useCallback(
+    (sortField: "count" | "name", sortOrder: "asc" | "desc") => {
     kyInstance3001
       .get(`products?sortField=${sortField}&sortOrder=${sortOrder}`)
       .json<TProduct[]>()
@@ -35,7 +34,7 @@ export function DialogSortingModalWrapper() {
         console.log("Updated data:", data);
       })
       .catch((error) => console.log("kyInstance error sort mode", error));
-  };
+  }, [updateTableRenderData]);
 
   return (
     <div className="flex items-center justify-center dark:bg-background p-4">

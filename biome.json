@@ -1,0 +1,57 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "quoteStyle": "double",
+    "semiColons": true,
+    "trailingComma": "all",
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "tailwindcss/class-order": ["error", {
+        "order": [
+          "position",
+          "display",
+          "flexbox",
+          "grid",
+          "spacing",
+          "sizing",
+          "typography",
+          "color",
+          "background",
+          "border",
+          "effects",
+          "transitions",
+          "interactivity",
+          "svg",
+          "filters"
+        ]
+      }]
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}

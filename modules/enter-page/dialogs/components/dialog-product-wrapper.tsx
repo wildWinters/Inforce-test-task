@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -6,41 +8,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/shad-cn/dialog"
-
+import { twAddProduct } from "../constant/tailwind/const-tw-add-product"
+import { twDialogContent } from "../constant/tailwind/const-tw-dialog-content"
 import ProductCardForm from "./open-ui-modal"
 import { Button } from "@/shared/shad-cn/button"
+import { CardModal } from "../../table-card/components/card-modal"
 export function DialogWrapper() {
   return (
     <div className="flex items-center justify-center bg-muted/30 dark:bg-background">
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            
-            className="
-              inline-flex items-center justify-center gap-2
-              rounded-xl px-5 py-2.5
-              font-semibold text-white tracking-wide
-              bg-gradient-to-r from-blue-500 to-indigo-500
-              shadow-md hover:shadow-lg
-              transition-all duration-200
-              hover:from-blue-600 hover:to-indigo-600
-              focus-visible:outline-none
-              focus-visible:ring-4 focus-visible:ring-indigo-500/30
-            "
+            className={twAddProduct}
           >
-            Add Product
+            Add Product 
           </Button>
         </DialogTrigger>
 
         <DialogContent
-          className="
-            sm:max-w-[480px]
-            rounded-2xl border-0 shadow-2xl
-            bg-background/80 backdrop-blur-xl
-            p-6
-            data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95
-            data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95
-          "
+          className={twDialogContent}
         >
           <DialogHeader className="space-y-3">
           <DialogTitle className="text-center text-2xl font-bold tracking-tight">
@@ -48,6 +34,8 @@ export function DialogWrapper() {
           </DialogTitle>
           </DialogHeader>
           <ProductCardForm/>
+          <CardModal />  
+          {/* <AddProductModal/> */}
         </DialogContent>
       </Dialog>
     </div>

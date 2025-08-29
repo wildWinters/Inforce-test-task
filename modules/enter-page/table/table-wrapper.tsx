@@ -58,7 +58,7 @@ export function TableWrapper() {
   }, [data, updateTableRenderData]);
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string | number) => kyInstance.delete(`products/${id}`).text(),
+    mutationFn: (id: string | number) => kyInstance.delete(`products/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [tanstackKey, sortField, sortOrder] });
     },
@@ -66,6 +66,7 @@ export function TableWrapper() {
       console.error("Помилка при видаленні:", error);
     },
   });
+  
 
   if (error) return <div>Error loading products</div>;
 

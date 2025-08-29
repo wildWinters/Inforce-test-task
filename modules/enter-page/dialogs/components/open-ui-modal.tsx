@@ -15,7 +15,7 @@ import {
 import { useFieldArray } from "react-hook-form";
 import { fields } from "../mock/mock-dileds-card";
 import { useProductForm } from "../hooks/use-product-form";
-import { useProductCardForm } from "../hooks/use-product-card-form"; // наш винесений хук
+import { useProductCardForm } from "../hooks/use-product-card-form";
 import { mockCardFooter } from "../mock/mock-card-foooter";
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 
@@ -46,6 +46,7 @@ export function FormFieldMapper({
     </>
   );
 }
+
 
 function WarningsFieldArray({
   control,
