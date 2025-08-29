@@ -1,7 +1,7 @@
 import ky from 'ky';
-const URL  = "http://localhost:3001"; 
+const URL  = "http://localhost:3001";
 
-export const kyInstanceNode = ky.create({
+export const kyInstance3001 = ky.create({
   prefixUrl: URL,
   timeout: 10000,                     
   retry: {

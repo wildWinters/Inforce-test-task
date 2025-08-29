@@ -8,5 +8,5 @@ export type TProduct = {
     height: number;
   };
   weight: string;
-  comments: (string | number)[];
+  comments: (string | number)[] | string | number;
 };

@@ -1,4 +1,5 @@
 "use client";
+
 import { Card, CardContent, CardFooter } from "@/shared/shad-cn/card";
 import { Button } from "@/shared/shad-cn/button";
 import { Input } from "@/shared/shad-cn/input";
@@ -15,8 +16,14 @@ import { useFieldArray } from "react-hook-form";
 import { fields } from "../mock/mock-dileds-card";
 import { useProductForm } from "../hooks/use-product-form";
 import { useProductCardForm } from "../hooks/use-product-card-form"; // наш винесений хук
+import { mockCardFooter } from "../mock/mock-card-foooter";
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 
-export function FormFieldMapper({ control }: { control: ReturnType<typeof useProductForm>["control"] }) {
+export function FormFieldMapper({
+  control,
+}: {
+  control: ReturnType<typeof useProductForm>["control"];
+}) {
   return (
     <>
       {fields.map(({ name, label, placeholder, type, description }) => (
@@ -40,7 +47,11 @@ export function FormFieldMapper({ control }: { control: ReturnType<typeof usePro
   );
 }
 
-function WarningsFieldArray({ control }: { control: ReturnType<typeof useProductForm>["control"] }) {
+function WarningsFieldArray({
+  control,
+}: {
+  control: ReturnType<typeof useProductForm>["control"];
+}) {
   const { fields, append, remove } = useFieldArray({ control, name: "warnings" });
 
   return (
@@ -52,7 +63,9 @@ function WarningsFieldArray({ control }: { control: ReturnType<typeof useProduct
         </Button>
       </div>
 
-      {!fields.length && <p className="text-xs text-muted-foreground">Попереджень поки що немає.</p>}
+      {!fields.length && (
+        <p className="text-xs text-muted-foreground">Попереджень поки що немає.</p>
+      )}
 
       {fields.map((f, index) => (
         <FormField
@@ -77,18 +90,17 @@ function WarningsFieldArray({ control }: { control: ReturnType<typeof useProduct
 }
 
 export default function ProductCardForm({ productId }: { productId?: string }) {
-  const { form, control, formState, onSubmit, reset, isFetching, isSaving } = useProductCardForm(productId);
+  const { form, control, formState, onSubmit, reset, isFetching, isSaving } =
+    useProductCardForm(productId);
 
   return (
     <Card className="w-full max-w-md h-[520px] overflow-y-auto">
       <Form {...form}>
         <form onSubmit={onSubmit}>
-
           <CardContent className="p-4 space-y-4">
             <p className={`text-sm text-muted-foreground ${!isFetching ? "hidden" : ""}`}>
               Loading...
             </p>
-
 
             <div className={isFetching ? "pointer-events-none opacity-50" : ""}>
               <FormFieldMapper control={control} />
@@ -97,22 +109,25 @@ export default function ProductCardForm({ productId }: { productId?: string }) {
           </CardContent>
 
           <CardFooter className="flex-col gap-2 px-4 pb-4">
-            <Button
-              type="submit"
-              className="w-full text-sm py-2"
-              disabled={formState.isSubmitting || isSaving || isFetching}
-            >
-              {isSaving ? "Saving..." : "Confirm"}
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              className="w-full text-sm py-2"
-              onClick={() => reset()}
-              disabled={isSaving || isFetching}
-            >
-              Cancel
-            </Button>
+            {mockCardFooter.map((footer) => {
+              const disabled = footer.disabledStates.some(
+                (state) => formState[state as keyof typeof formState] || isSaving || isFetching
+              );
+
+              return (
+                <DialogPrimitive.Close key={footer.id}> 
+                <Button
+                  onClick={footer.onClick}
+                  type={footer.type as "button" | "submit"} 
+                  className={footer.className,"min-w-[250px] mx-[20px]"}
+                  variant={footer.variant as any} 
+                  disabled={disabled}
+                >
+                  {footer.loadingLabel && isSaving ? footer.loadingLabel : footer.label}
+                </Button>
+                </DialogPrimitive.Close>
+              );
+            })}
           </CardFooter>
         </form>
       </Form>

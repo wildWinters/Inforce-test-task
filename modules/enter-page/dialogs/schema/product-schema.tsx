@@ -1,6 +1,5 @@
 import z from "zod";
 export const ProductSchema = z.object({
-  id: z.string().min(1, { message: "ID cannot be empty" }),
   imageUrl: z.string().url({ message: "Invalid URL format for image" }),
   name: z.string().min(1, { message: "Name cannot be empty" }),
   count: z.coerce.number().int().nonnegative({ message: "Count cannot be negative" }),

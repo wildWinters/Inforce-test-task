@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "start": "node table.js",
     "watch-db": "node dbWatcher.js",
     "watch-db:append": "node dbWatcher.js --append",
     "watch-db:fast": "node dbWatcher.js --interval=2000"
@@ -17,6 +17,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "uuid": "^11.1.0"
   }
 }

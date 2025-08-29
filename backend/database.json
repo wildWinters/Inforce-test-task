@@ -1,0 +1,148 @@
+{
+  "products": [
+    {
+      "id": "3",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Cherry",
+      "count": 50,
+      "size": {
+        "width": 50,
+        "height": 50
+      },
+      "weight": 50,
+      "width": 36,
+      "height": 50
+    },
+    {
+      "id": "4",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Date",
+      "count": 20,
+      "size": {
+        "width": 40,
+        "height": 40
+      },
+      "weight": "50g",
+      "width": 40,
+      "height": 40
+    },
+    {
+      "id": "5",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Elderberry",
+      "count": 21,
+      "size": {
+        "width": 37,
+        "height": 36
+      },
+      "weight": "12g"
+    },
+    {
+      "id": "6",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Fig",
+      "count": 40,
+      "size": {
+        "width": 35,
+        "height": 35
+      },
+      "weight": "20g"
+    },
+    {
+      "id": "7",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Grapes",
+      "count": 50,
+      "size": {
+        "width": 20,
+        "height": 20
+      },
+      "weight": "5g"
+    },
+    {
+      "id": "8",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Honeydew",
+      "count": 16,
+      "size": {
+        "width": 45,
+        "height": 45
+      },
+      "weight": "150g"
+    },
+    {
+      "id": "9",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Indian Fig",
+      "count": 25,
+      "size": {
+        "width": 30,
+        "height": 30
+      },
+      "weight": "18g"
+    },
+    {
+      "id": "10",
+      "imageUrl": "https://via.placeholder.com/150",
+      "name": "Jackfruit",
+      "count": 12,
+      "size": {
+        "width": 60,
+        "height": 60
+      },
+      "weight": 1005
+    }
+  ],
+  "comments": [
+    {
+      "id": "3",
+      "comments": [
+        "Fresh and tasty apples!"
+      ],
+      "date": "2025-08-28T14:15:32.603Z"
+    },
+    {
+      "id": "4",
+      "comments": [
+        "Great for pies."
+      ],
+      "date": "2025-08-28T14:22:43.043Z"
+    },
+    {
+      "id": "5",
+      "comments": [],
+      "date": "2025-08-28T14:10:21.148Z"
+    },
+    {
+      "id": "6",
+      "comments": [
+        "Fresh and tasty apples!",
+        "Great for pies."
+      ],
+      "date": "12:45 25.08.2021"
+    },
+    {
+      "id": "7",
+      "comments": [
+        "Fresh and tasty apples!",
+        "Great for pies."
+      ],
+      "date": "09:20 26.08.2021"
+    },
+    {
+      "id": "8",
+      "comments": [
+        "Fresh and tasty apples!",
+        "Great for pies."
+      ],
+      "date": "14:50 26.08.2021"
+    },
+    {
+      "id": "10",
+      "comments": [
+        "hello world"
+      ],
+      "date": "2025-08-29T01:52:04.560Z"
+    }
+  ]
+}
