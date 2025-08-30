@@ -1,137 +1,123 @@
-"use client";
+  "use client";
+  import { Button } from "@/shared/shad-cn/button";
+  import { Input } from "@/shared/shad-cn/input";
+  import { fields } from "../mock/mock-dileds-card";
+  import { z } from "zod";
+  import { useForm } from "react-hook-form";
+  import { zodResolver } from "@hookform/resolvers/zod";
+  import { kyInstance } from "@/shared/lib/ky";
+  
 
-import { Card, CardContent, CardFooter } from "@/shared/shad-cn/card";
-import { Button } from "@/shared/shad-cn/button";
-import { Input } from "@/shared/shad-cn/input";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-} from "@/shared/shad-cn/form";
-import { useFieldArray } from "react-hook-form";
-import { fields } from "../mock/mock-dileds-card";
-import { useProductForm } from "../hooks/use-product-form";
-import { useProductCardForm } from "../hooks/use-product-card-form";
-import { mockCardFooter } from "../mock/mock-card-foooter";
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+  export function ContetDialogCard() {
+    const schemacard = z.object({
+      imageUrl: z.string().url({ message: "Invalid URL format for image" }),
+      name: z
+        .string()
+        .min(1, "minimum symbols is 1")
+        .max(255, "max symbols is 255"),
+      count: z
+        .number()
+        .min(1, "minimum count of product is one")
+        .max(200, "max count is 200"),
+      size: z.object({
+        width: z
+          .number()
+          .min(1, "minimum width of product is one")
+          .max(200, "max width is 200"),
+        height: z
+          .number()
+          .min(1, "minimum height of product is one")
+          .max(200, "max height is 200"),
+      }),
 
-export function FormFieldMapper({
-  control,
-}: {
-  control: ReturnType<typeof useProductForm>["control"];
-}) {
-  return (
-    <>
-      {fields.map(({ name, label, placeholder, type, description }) => (
-        <FormField
-          key={name}
-          control={control}
-          name={name}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label}</FormLabel>
-              <FormControl>
-                <Input {...field} type={type} placeholder={placeholder} />
-              </FormControl>
-              {description && <FormDescription>{description}</FormDescription>}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      ))}
-    </>
-  );
-}
+      weight: z.preprocess((v) => {
+        if (v === '' || v === null || v === undefined) return undefined;
+        const n = typeof v === 'string' ? Number(v) : v;
+        return Number.isNaN(n) ? undefined : n;
+      }, z.number().min(1, "minimum weight of product is one").max(200, "max weight is 200").optional()),
+    });
+
+    type InfetSchema = z.infer<typeof schemacard>;
+
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(schemacard),
+    mode: "onSubmit",
+    defaultValues: {
+      imageUrl: "",
+      name: "",
+      count: 0,
+      size: {
+        width: 0,
+        height: 0,
+      },
+      weight:2
+    },
+  });
+
+      const handlePostGredients = async (data: z.infer<typeof schemacard>) => {
+        try {
+          // IMPORTANT: no leading slash, so ky prefixUrl is used
+          await kyInstance.post("products", {
+            json: {
+              imageUrl: data.imageUrl,
+              name: data.name,
+              count: data.count,
+              size: {
+                width: data.size.width,
+                height: data.size.height,
+              },
+              weight: data.weight,
+            },
+          });
+          console.log("Product created");
+        } catch (e) {
+          console.error("POST /products failed", e);
+        }
+      };
+
+    const submit = async (data: InfetSchema) => {
+      console.log("hello world my dear friend", data);
+      await handlePostGredients(data);
+    };
 
 
-function WarningsFieldArray({
-  control,
-}: {
-  control: ReturnType<typeof useProductForm>["control"];
-}) {
-  const { fields, append, remove } = useFieldArray({ control, name: "warnings" });
+    const getErrorMessage = (path: string) => {
+      const parts = path.split(".");
 
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <FormLabel>Warnings</FormLabel>
-        <Button type="button" variant="secondary" size="sm" onClick={() => append("")}>
-          + Add warning
-        </Button>
-      </div>
+      let node: any = errors;
+      for (const p of parts) node = node?.[p];
+      return node?.message as string | undefined;
+    };
 
-      {!fields.length && (
-        <p className="text-xs text-muted-foreground">Попереджень поки що немає.</p>
-      )}
+    return (
+      <form
+        className="flex flex-col gap-[10px]"
+        onSubmit={handleSubmit(submit, (err) => {
+          console.log('form errors', err);
+        })}
+      >
+        {fields.map((field) => (
+          <div key={field.name}>
+            <div className="flex gap-[20px] items-center justify-center">
+              <label htmlFor={field.name}>{field.label}</label>
 
-      {fields.map((f, index) => (
-        <FormField
-          key={f.id}
-          control={control}
-          name={`warnings.${index}` as const}
-          render={({ field }) => (
-            <FormItem className="flex items-start gap-2">
-              <FormControl className="flex-1">
-                <Input placeholder={`Warning #${index + 1}`} {...field} />
-              </FormControl>
-              <Button type="button" variant="ghost" onClick={() => remove(index)}>
-                Remove
-              </Button>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
-export default function ProductCardForm({ productId }: { productId?: string }) {
-  const { form, control, formState, onSubmit, reset, isFetching, isSaving } =
-    useProductCardForm(productId);
-
-  return (
-    <Card className="w-full max-w-md h-[520px] overflow-y-auto">
-      <Form {...form}>
-        <form onSubmit={onSubmit}>
-          <CardContent className="p-4 space-y-4">
-            <p className={`text-sm text-muted-foreground ${!isFetching ? "hidden" : ""}`}>
-              Loading...
-            </p>
-
-            <div className={isFetching ? "pointer-events-none opacity-50" : ""}>
-              <FormFieldMapper control={control} />
-              <WarningsFieldArray control={control} />
+              <Input
+                type={field.type}
+                id={field.name}
+                placeholder={field.placeholder}
+                // react-hook-form supports dot notation; cast for typing only
+                {...register(field.name as unknown as keyof InfetSchema, {
+                  valueAsNumber: field.type === "number",
+                })}
+              />
             </div>
-          </CardContent>
-
-          <CardFooter className="flex-col gap-2 px-4 pb-4">
-            {mockCardFooter.map((footer) => {
-              const disabled = footer.disabledStates.some(
-                (state) => formState[state as keyof typeof formState] || isSaving || isFetching
-              );
-
-              return (
-                <DialogPrimitive.Close key={footer.id}> 
-                <Button
-                  onClick={footer.onClick}
-                  type={footer.type as "button" | "submit"} 
-                  className={footer.className,"min-w-[250px] mx-[20px]"}
-                  variant={footer.variant as any} 
-                  disabled={disabled}
-                >
-                  {footer.loadingLabel && isSaving ? footer.loadingLabel : footer.label}
-                </Button>
-                </DialogPrimitive.Close>
-              );
-            })}
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
-  );
-}
+            <span className="text-red-500">
+              {getErrorMessage(field.name)}
+            </span>
+          </div>
+        ))}
+        <Button variant="destructive" type="submit">Confirm</Button>
+        <Button type="button">Cancel</Button>
+      </form>
+    );
+  }

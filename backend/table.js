@@ -3,6 +3,8 @@
   import { readFile, writeFile } from 'fs/promises';
   import path from 'path';
   import { fileURLToPath } from 'url';
+  import { v4 as uuidv4 } from 'uuid';
+  import { randomBytes } from 'crypto';
 
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -58,6 +60,55 @@
       return res.status(500).json({ error: 'Failed to delete product' });
     }
   });
+
+  // Create a new product
+app.post('/products', async (req, res) => {
+  try {
+    const { imageUrl, name, count, size, weight } = req.body || {};
+
+    if (!imageUrl || typeof imageUrl !== 'string') {
+      return res.status(400).json({ error: 'imageUrl is required and must be a string (URL)' });
+    }
+    if (!name || typeof name !== 'string' || name.length < 1) {
+      return res.status(400).json({ error: 'name is required and must be a non-empty string' });
+    }
+    const countNum = Number(count);
+    if (!Number.isFinite(countNum) || countNum < 1) {
+      return res.status(400).json({ error: 'count must be a positive number' });
+    }
+    const widthNum = Number(size?.width);
+    const heightNum = Number(size?.height);
+    if (!Number.isFinite(widthNum) || widthNum < 1 || !Number.isFinite(heightNum) || heightNum < 1) {
+      return res.status(400).json({ error: 'size.width and size.height must be positive numbers' });
+    }
+
+    const raw = await readFile(dbPath, 'utf-8');
+    const db = JSON.parse(raw || '{}');
+    const products = Array.isArray(db.products) ? db.products : [];
+
+    // ID з 6 символів (hex)
+    const shortId = randomBytes(3).toString('hex'); // 3 байти = 6 hex символів
+
+    const product = {
+      id: shortId,
+      imageUrl,
+      name,
+      count: countNum,
+      size: { width: widthNum, height: heightNum },
+      ...(weight !== undefined ? { weight } : {}),
+    };
+
+    products.push(product);
+    const updated = { ...db, products };
+    await writeFile(dbPath, JSON.stringify(updated, null, 2), 'utf-8');
+
+    return res.status(201).json(product);
+  } catch (err) {
+    console.error('Create product error:', err);
+    return res.status(500).json({ error: 'Failed to create product' });
+  }
+});
+
   
   app.get('/products/sort', async (req, res) => {
     const { field, order, mode } = req.query;

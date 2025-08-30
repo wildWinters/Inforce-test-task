@@ -16,4 +16,5 @@ export const fields: SimpleField[] = [
   { name: "count", label: "Count", placeholder: "0", type: "number" },
   { name: "size.width", label: "Width", placeholder: "1", type: "number", },
   { name: "size.height", label: "Height", placeholder: "1", type: "number", },
+  { name: "weight", label: "Weight", placeholder: "1", type: "number", },
 ];

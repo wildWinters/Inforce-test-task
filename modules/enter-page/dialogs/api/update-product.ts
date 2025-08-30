@@ -1,6 +1,12 @@
-import { Product } from "../schema/product-schema";
+import { type InfetSchema } from "../schema/product-schema";
 import { kyInstance } from "@/shared/lib/ky";
 
-export async function updateProduct(data: Product) {
-  return kyInstance.put(`products/${data.id}`, { json: data }).json<Product>();
+// Send partial updates. Pass the product id and only the fields you want to update
+export async function updateProduct(
+  id: string,
+  updates: Partial<InfetSchema> & { size?: Partial<InfetSchema["size"]> }
+) {
+  return kyInstance
+    .patch(`products/${id}`, { json: updates })
+    .json<InfetSchema>();
 }

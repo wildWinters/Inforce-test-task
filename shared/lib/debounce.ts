@@ -1,5 +1,5 @@
 import { kyInstance } from "./ky";
-
+import { TProduct } from '../../modules/enter-page/table/types/t-product'
 
 export function debounce(
   URL: string,

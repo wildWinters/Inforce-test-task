@@ -10,9 +10,10 @@ import {
 } from "@/shared/shad-cn/dialog"
 import { twAddProduct } from "../constant/tailwind/const-tw-add-product"
 import { twDialogContent } from "../constant/tailwind/const-tw-dialog-content"
-import ProductCardForm from "./open-ui-modal"
+
 import { Button } from "@/shared/shad-cn/button"
 import { CardModal } from "../../table-card/components/card-modal"
+import { ContetDialogCard } from "./open-ui-modal";
 export function DialogWrapper() {
   return (
     <div className="flex items-center justify-center bg-muted/30 dark:bg-background">
@@ -33,9 +34,7 @@ export function DialogWrapper() {
               Product card Modal 
           </DialogTitle>
           </DialogHeader>
-          <ProductCardForm/>
-          <CardModal />  
-          {/* <AddProductModal/> */}
+          <ContetDialogCard/>
         </DialogContent>
       </Dialog>
     </div>
