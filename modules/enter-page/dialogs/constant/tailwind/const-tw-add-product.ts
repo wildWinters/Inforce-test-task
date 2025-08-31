@@ -1,4 +1,4 @@
-export const twAddProduct = `
+export const TW_ADD_PRODUCT = `
   inline-flex items-center justify-center gap-2
   rounded-xl px-5 py-2.5
   font-semibold text-white tracking-wide
@@ -8,4 +8,4 @@ export const twAddProduct = `
   hover:from-blue-600 hover:to-indigo-600
   focus-visible:outline-none
   focus-visible:ring-4 focus-visible:ring-indigo-500/30
-`
+`;

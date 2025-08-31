@@ -20,25 +20,28 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "tailwindcss/class-order": ["error", {
-        "order": [
-          "position",
-          "display",
-          "flexbox",
-          "grid",
-          "spacing",
-          "sizing",
-          "typography",
-          "color",
-          "background",
-          "border",
-          "effects",
-          "transitions",
-          "interactivity",
-          "svg",
-          "filters"
-        ]
-      }]
+      "tailwindcss/class-order": [
+        "error",
+        {
+          "order": [
+            "position",
+            "display",
+            "flexbox",
+            "grid",
+            "spacing",
+            "sizing",
+            "typography",
+            "color",
+            "background",
+            "border",
+            "effects",
+            "transitions",
+            "interactivity",
+            "svg",
+            "filters"
+          ]
+        }
+      ]
     }
   },
   "javascript": {

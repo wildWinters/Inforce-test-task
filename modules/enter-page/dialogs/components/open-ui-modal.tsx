@@ -1,123 +1,103 @@
-  "use client";
-  import { Button } from "@/shared/shad-cn/button";
-  import { Input } from "@/shared/shad-cn/input";
-  import { fields } from "../mock/mock-dileds-card";
-  import { z } from "zod";
-  import { useForm } from "react-hook-form";
-  import { zodResolver } from "@hookform/resolvers/zod";
-  import { kyInstance } from "@/shared/lib/ky";
-  
+'use client';
 
-  export function ContetDialogCard() {
-    const schemacard = z.object({
-      imageUrl: z.string().url({ message: "Invalid URL format for image" }),
-      name: z
-        .string()
-        .min(1, "minimum symbols is 1")
-        .max(255, "max symbols is 255"),
-      count: z
-        .number()
-        .min(1, "minimum count of product is one")
-        .max(200, "max count is 200"),
-      size: z.object({
-        width: z
-          .number()
-          .min(1, "minimum width of product is one")
-          .max(200, "max width is 200"),
-        height: z
-          .number()
-          .min(1, "minimum height of product is one")
-          .max(200, "max height is 200"),
-      }),
+import { Button } from '@/shared/shad-cn/button';
+import { Input } from '@/shared/shad-cn/input';
+import { fields } from '../mock/mock-dileds-card';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
-      weight: z.preprocess((v) => {
-        if (v === '' || v === null || v === undefined) return undefined;
-        const n = typeof v === 'string' ? Number(v) : v;
-        return Number.isNaN(n) ? undefined : n;
-      }, z.number().min(1, "minimum weight of product is one").max(200, "max weight is 200").optional()),
-    });
+import { kyInstance } from '@/shared/lib/ky';
+import { schemaCard } from '../schema/product-schema';
 
-    type InfetSchema = z.infer<typeof schemacard>;
+// Використовуємо точний тип форми з Zod
+type FormData = z.infer<typeof schemaCard>;
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: zodResolver(schemacard),
-    mode: "onSubmit",
+export function ContetDialogCard() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schemaCard),
+    mode: 'onSubmit',
     defaultValues: {
-      imageUrl: "",
-      name: "",
+      imageUrl: '',
+      name: '',
       count: 0,
-      size: {
-        width: 0,
-        height: 0,
-      },
-      weight:2
+      size: { width: 0, height: 0 },
+      weight: 2, // weight обов'язковий
     },
   });
 
-      const handlePostGredients = async (data: z.infer<typeof schemacard>) => {
-        try {
-          // IMPORTANT: no leading slash, so ky prefixUrl is used
-          await kyInstance.post("products", {
-            json: {
-              imageUrl: data.imageUrl,
-              name: data.name,
-              count: data.count,
-              size: {
-                width: data.size.width,
-                height: data.size.height,
-              },
-              weight: data.weight,
-            },
-          });
-          console.log("Product created");
-        } catch (e) {
-          console.error("POST /products failed", e);
-        }
-      };
+  const handlePostGredients = async (data: FormData) => {
+    try {
+      await kyInstance.post('products', {
+        json: data,
+      });
+    } catch (e) {
+      console.error('POST /products failed', e);
+    }
+  };
 
-    const submit = async (data: InfetSchema) => {
-      console.log("hello world my dear friend", data);
-      await handlePostGredients(data);
-    };
+  const submit: SubmitHandler<FormData> = async (data) =>
+    await handlePostGredients(data);
 
+  const getErrorMessage = (path: string) => {
+    if (path === 'size.width') {
+      return errors.size?.width?.message;
+    }
+    if (path === 'size.height') {
+      return errors.size?.height?.message;
+    }
+    return (errors as any)[path]?.message;
+  };
 
-    const getErrorMessage = (path: string) => {
-      const parts = path.split(".");
+  return (
+    <form
+      className="flex flex-col gap-[10px]"
+      onSubmit={handleSubmit(submit, (err) => console.log('form errors', err))}
+    >
+      {fields.map((field) => (
+        <div key={field.name}>
+          <div className="flex gap-[20px] items-center justify-center">
+            <label htmlFor={field.name}>{field.label}</label>
 
-      let node: any = errors;
-      for (const p of parts) node = node?.[p];
-      return node?.message as string | undefined;
-    };
-
-    return (
-      <form
-        className="flex flex-col gap-[10px]"
-        onSubmit={handleSubmit(submit, (err) => {
-          console.log('form errors', err);
-        })}
-      >
-        {fields.map((field) => (
-          <div key={field.name}>
-            <div className="flex gap-[20px] items-center justify-center">
-              <label htmlFor={field.name}>{field.label}</label>
-
+            {field.name === 'size.width' ? (
+              <Input
+                type="number"
+                placeholder="Width"
+                {...register('size.width', {
+                  valueAsNumber: true,
+                })}
+              />
+            ) : field.name === 'size.height' ? (
+              <Input
+                type="number"
+                placeholder="Height"
+                {...register('size.height', {
+                  valueAsNumber: true,
+                })}
+              />
+            ) : (
               <Input
                 type={field.type}
                 id={field.name}
                 placeholder={field.placeholder}
-                // react-hook-form supports dot notation; cast for typing only
-                {...register(field.name as unknown as keyof InfetSchema, {
-                  valueAsNumber: field.type === "number",
+                {...register(field.name as keyof FormData, {
+                  valueAsNumber: field.type === 'number',
                 })}
               />
-            </div>
-            <span className="text-red-500">
-              {getErrorMessage(field.name)}
-            </span>
+            )}
           </div>
-        ))}
-        <Button variant="destructive" type="submit">Confirm</Button>
-        <Button type="button">Cancel</Button>
-      </form>
-    );
-  }
+          <span className="text-red-500">{getErrorMessage(field.name)}</span>
+        </div>
+      ))}
+
+      <Button variant="destructive" type="submit">
+        Confirm
+      </Button>
+      <Button type="button">Cancel</Button>
+    </form>
+  );
+}

@@ -1,4 +1,4 @@
-export const twButtonChoseSortMode = `
+export const TW_BUTTON_CHOSE_SORT_MODE = `
   sm:max-w-[480px]
   rounded-2xl border-0 shadow-2xl
   bg-background/80 backdrop-blur-xl

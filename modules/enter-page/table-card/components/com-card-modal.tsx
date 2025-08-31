@@ -1,10 +1,18 @@
-"use client";
+'use client';
 
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/shared/shad-cn/form";
-import { Input } from "@/shared/shad-cn/input";
-import { Button } from "@/shared/shad-cn/button";
-import { useValidationCard } from "../hook/use-validation-card";
-import { fields } from "../mock/fields";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from '@/shared/shad-cn/form';
+import { Input } from '@/shared/shad-cn/input';
+import { Button } from '@/shared/shad-cn/button';
+import { useValidationCard } from '../hook/use-validation-card-hook';
+import { fields } from '../mock/mock-fields';
 
 export function CardModal() {
   const form = useValidationCard(); // Тепер повний UseFormReturn + onSubmit
@@ -21,9 +29,15 @@ export function CardModal() {
               <FormItem>
                 <FormLabel>{field.label}</FormLabel>
                 <FormControl>
-                  <Input type={field.type} placeholder={field.placeholder} {...rhfField} />
+                  <Input
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    {...rhfField}
+                  />
                 </FormControl>
-                <FormDescription>{field.description || "Enter value"}</FormDescription>
+                <FormDescription>
+                  {field.description || 'Enter value'}
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

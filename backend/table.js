@@ -1,76 +1,80 @@
-  import express from 'express';
-  import cors from 'cors';
-  import { readFile, writeFile } from 'fs/promises';
-  import path from 'path';
-  import { fileURLToPath } from 'url';
-  import { v4 as uuidv4 } from 'uuid';
-  import { randomBytes } from 'crypto';
+import express from 'express';
+import cors from 'cors';
+import { readFile, writeFile } from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
+import { randomBytes } from 'crypto';
 
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  const app = express();
-  app.use(cors());
-  app.use(express.json());
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  const PORT = process.env.PORT || 4000;
-  const dbPath = path.join(__dirname, 'database.json');
+const PORT = process.env.PORT || 4000;
+const dbPath = path.join(__dirname, 'database.json');
 
-  app.get('/products', async (_req, res) => {
-    try {
-      const raw = await readFile(dbPath, 'utf-8');
-      const { products = [] } = JSON.parse(raw);
-      res.json(products);
-    } catch (err) {
-      console.error('Read products error:', err);
-      res.status(500).json({ error: 'Failed to read products' });
+app.get('/products', async (_req, res) => {
+  try {
+    const raw = await readFile(dbPath, 'utf-8');
+    const { products = [] } = JSON.parse(raw);
+    res.json(products);
+  } catch (err) {
+    console.error('Read products error:', err);
+    res.status(500).json({ error: 'Failed to read products' });
+  }
+});
+
+app.get('/comments', async (_req, res) => {
+  try {
+    const raw = await readFile(dbPath, 'utf-8');
+    const { comments = [] } = JSON.parse(raw);
+    res.json(comments);
+  } catch (err) {
+    console.error('Read comments error:', err);
+    res.status(500).json({ error: 'Failed to read comments' });
+  }
+});
+
+app.delete('/products/:id', async (req, res) => {
+  const id = String(req.params.id);
+  try {
+    const raw = await readFile(dbPath, 'utf-8');
+    const db = JSON.parse(raw);
+    const products = Array.isArray(db.products) ? db.products : [];
+
+    const index = products.findIndex((p) => String(p.id) === id);
+    if (index === -1) {
+      return res.status(404).json({ error: `Product with id ${id} not found` });
     }
-  });
 
-  app.get('/comments', async (_req, res) => {
-    try {
-      const raw = await readFile(dbPath, 'utf-8');
-      const { comments = [] } = JSON.parse(raw);
-      res.json(comments);
-    } catch (err) {
-      console.error('Read comments error:', err);
-      res.status(500).json({ error: 'Failed to read comments' });
-    }
-  });
+    const [removed] = products.splice(index, 1);
+    const updated = { ...db, products };
+    await writeFile(dbPath, JSON.stringify(updated, null, 2), 'utf-8');
 
-  app.delete('/products/:id', async (req, res) => {
-    const id = String(req.params.id);
-    try {
-      const raw = await readFile(dbPath, 'utf-8');
-      const db = JSON.parse(raw);
-      const products = Array.isArray(db.products) ? db.products : [];
+    return res.json({ success: true, removed });
+  } catch (err) {
+    console.error('Delete product error:', err);
+    return res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
 
-      const index = products.findIndex((p) => String(p.id) === id);
-      if (index === -1) {
-        return res.status(404).json({ error: `Product with id ${id} not found` });
-      }
-
-      const [removed] = products.splice(index, 1);
-      const updated = { ...db, products };
-      await writeFile(dbPath, JSON.stringify(updated, null, 2), 'utf-8');
-
-      return res.json({ success: true, removed });
-    } catch (err) {
-      console.error('Delete product error:', err);
-      return res.status(500).json({ error: 'Failed to delete product' });
-    }
-  });
-
-  // Create a new product
+// Create a new product
 app.post('/products', async (req, res) => {
   try {
     const { imageUrl, name, count, size, weight } = req.body || {};
 
     if (!imageUrl || typeof imageUrl !== 'string') {
-      return res.status(400).json({ error: 'imageUrl is required and must be a string (URL)' });
+      return res
+        .status(400)
+        .json({ error: 'imageUrl is required and must be a string (URL)' });
     }
     if (!name || typeof name !== 'string' || name.length < 1) {
-      return res.status(400).json({ error: 'name is required and must be a non-empty string' });
+      return res
+        .status(400)
+        .json({ error: 'name is required and must be a non-empty string' });
     }
     const countNum = Number(count);
     if (!Number.isFinite(countNum) || countNum < 1) {
@@ -78,8 +82,15 @@ app.post('/products', async (req, res) => {
     }
     const widthNum = Number(size?.width);
     const heightNum = Number(size?.height);
-    if (!Number.isFinite(widthNum) || widthNum < 1 || !Number.isFinite(heightNum) || heightNum < 1) {
-      return res.status(400).json({ error: 'size.width and size.height must be positive numbers' });
+    if (
+      !Number.isFinite(widthNum) ||
+      widthNum < 1 ||
+      !Number.isFinite(heightNum) ||
+      heightNum < 1
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'size.width and size.height must be positive numbers' });
     }
 
     const raw = await readFile(dbPath, 'utf-8');
@@ -109,74 +120,77 @@ app.post('/products', async (req, res) => {
   }
 });
 
-  
-  app.get('/products/sort', async (req, res) => {
-    const { field, order, mode } = req.query;
-  
-    if (!field || typeof field !== 'string') {
-      return res.status(400).json({ error: 'Field query parameter is required' });
-    }
-  
-    const dir = String((order || mode || 'asc')).toLowerCase();
-    if (dir !== 'asc' && dir !== 'desc') {
-      return res.status(400).json({ error: 'Order/mode must be "asc" or "desc"' });
-    }
-  
-    const getByPath = (obj, path) => {
-      try {
-        return path.split('.').reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
-      } catch {
-        return undefined;
-      }
-    };
-  
+app.get('/products/sort', async (req, res) => {
+  const { field, order, mode } = req.query;
+
+  if (!field || typeof field !== 'string') {
+    return res.status(400).json({ error: 'Field query parameter is required' });
+  }
+
+  const dir = String(order || mode || 'asc').toLowerCase();
+  if (dir !== 'asc' && dir !== 'desc') {
+    return res
+      .status(400)
+      .json({ error: 'Order/mode must be "asc" or "desc"' });
+  }
+
+  const getByPath = (obj, path) => {
     try {
-      const raw = await readFile(dbPath, 'utf-8');
-      const db = JSON.parse(raw);
-      const products = Array.isArray(db.products) ? db.products : [];
-      const comments = Array.isArray(db.comments) ? db.comments : [];
-  
-      // Сортування продуктів
-      const sorted = [...products].sort((a, b) => {
-        const valA = getByPath(a, field);
-        const valB = getByPath(b, field);
-  
-        const aU = valA === undefined || valA === null;
-        const bU = valB === undefined || valB === null;
-        if (aU && bU) return 0;
-        if (aU) return dir === 'asc' ? 1 : -1;
-        if (bU) return dir === 'asc' ? -1 : 1;
-  
-        const numA = Number(valA);
-        const numB = Number(valB);
-        if (Number.isFinite(numA) && Number.isFinite(numB)) {
-          return dir === 'asc' ? numA - numB : numB - numA;
-        }
-  
-        const strA = String(valA).toLowerCase();
-        const strB = String(valB).toLowerCase();
-        if (strA < strB) return dir === 'asc' ? -1 : 1;
-        if (strA > strB) return dir === 'asc' ? 1 : -1;
-        return 0;
-      });
-  
-      // Додаємо коментарі до продуктів
-      const withComments = sorted.map(product => {
-        const productComments = comments.find(c => String(c.id) === String(product.id));
-        return {
-          ...product,
-          comments: productComments?.comments || []
-        };
-      });
-  
-      res.json(withComments);
-    } catch (err) {
-      console.error('Sort products error:', err);
-      res.status(500).json({ error: 'Failed to sort products' });
+      return path
+        .split('.')
+        .reduce((acc, key) => (acc == null ? undefined : acc[key]), obj);
+    } catch {
+      return undefined;
     }
-  });
-  
-  
+  };
+
+  try {
+    const raw = await readFile(dbPath, 'utf-8');
+    const db = JSON.parse(raw);
+    const products = Array.isArray(db.products) ? db.products : [];
+    const comments = Array.isArray(db.comments) ? db.comments : [];
+
+    // Сортування продуктів
+    const sorted = [...products].sort((a, b) => {
+      const valA = getByPath(a, field);
+      const valB = getByPath(b, field);
+
+      const aU = valA === undefined || valA === null;
+      const bU = valB === undefined || valB === null;
+      if (aU && bU) return 0;
+      if (aU) return dir === 'asc' ? 1 : -1;
+      if (bU) return dir === 'asc' ? -1 : 1;
+
+      const numA = Number(valA);
+      const numB = Number(valB);
+      if (Number.isFinite(numA) && Number.isFinite(numB)) {
+        return dir === 'asc' ? numA - numB : numB - numA;
+      }
+
+      const strA = String(valA).toLowerCase();
+      const strB = String(valB).toLowerCase();
+      if (strA < strB) return dir === 'asc' ? -1 : 1;
+      if (strA > strB) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    // Додаємо коментарі до продуктів
+    const withComments = sorted.map((product) => {
+      const productComments = comments.find(
+        (c) => String(c.id) === String(product.id)
+      );
+      return {
+        ...product,
+        comments: productComments?.comments || [],
+      };
+    });
+
+    res.json(withComments);
+  } catch (err) {
+    console.error('Sort products error:', err);
+    res.status(500).json({ error: 'Failed to sort products' });
+  }
+});
 
 app.post('/comments', async (req, res) => {
   const { id, comment, date } = req.body;
@@ -191,11 +205,13 @@ app.post('/comments', async (req, res) => {
     const comments = Array.isArray(db.comments) ? db.comments : [];
 
     // Знаходимо існуючий об'єкт з цим id
-    const existing = comments.find(c => String(c.id) === String(id));
+    const existing = comments.find((c) => String(c.id) === String(id));
 
     if (existing) {
       // Додаємо новий коментар у масив
-      existing.comments = Array.isArray(existing.comments) ? existing.comments : [];
+      existing.comments = Array.isArray(existing.comments)
+        ? existing.comments
+        : [];
       existing.comments.push(comment);
       existing.date = date; // оновлюємо дату останнього коментаря
     } else {
@@ -212,7 +228,6 @@ app.post('/comments', async (req, res) => {
     res.status(500).json({ error: 'Failed to add comment' });
   }
 });
-  
 
 app.delete('/comments/:id/:index', async (req, res) => {
   const id = String(req.params.id);
@@ -227,11 +242,20 @@ app.delete('/comments/:id/:index', async (req, res) => {
     const db = JSON.parse(raw);
     const comments = Array.isArray(db.comments) ? db.comments : [];
 
-    const existing = comments.find(c => String(c.id) === id);
-    if (!existing) return res.status(404).json({ error: `Comment with id ${id} not found` });
+    const existing = comments.find((c) => String(c.id) === id);
+    if (!existing)
+      return res.status(404).json({ error: `Comment with id ${id} not found` });
 
-    if (!Array.isArray(existing.comments) || indexToDelete < 0 || indexToDelete >= existing.comments.length) {
-      return res.status(404).json({ error: `Comment at index ${indexToDelete} not found for id ${id}` });
+    if (
+      !Array.isArray(existing.comments) ||
+      indexToDelete < 0 ||
+      indexToDelete >= existing.comments.length
+    ) {
+      return res
+        .status(404)
+        .json({
+          error: `Comment at index ${indexToDelete} not found for id ${id}`,
+        });
     }
 
     const removed = existing.comments.splice(indexToDelete, 1)[0];
@@ -245,71 +269,72 @@ app.delete('/comments/:id/:index', async (req, res) => {
   }
 });
 
-  
-  app.get('/comments/:id', async (req, res) => {
-    const id = String(req.params.id);
-    try {
-      const raw = await readFile(dbPath, 'utf-8');
-      const { comments = [] } = JSON.parse(raw);
-      const item = comments.find(c => String(c.id) === id);
-  
-      if (!item) {
-        return res.status(404).json({ error: `No comments found for id ${id}` });
-      }
-  
-      res.json(item.comments || []);
-    } catch (err) {
-      console.error('Read comments by id error:', err);
-      res.status(500).json({ error: 'Failed to read comments by id' });
+app.get('/comments/:id', async (req, res) => {
+  const id = String(req.params.id);
+  try {
+    const raw = await readFile(dbPath, 'utf-8');
+    const { comments = [] } = JSON.parse(raw);
+    const item = comments.find((c) => String(c.id) === id);
+
+    if (!item) {
+      return res.status(404).json({ error: `No comments found for id ${id}` });
     }
-  });
-  app.patch('/products/:id', async (req, res) => {
-    const id = String(req.params.id);
-    const updates = req.body; // лише ті поля, які треба змінити
-  
-    try {
-      const raw = await readFile(dbPath, 'utf-8');
-      const db = JSON.parse(raw);
-      const products = Array.isArray(db.products) ? db.products : [];
-  
-      const index = products.findIndex((p) => String(p.id) === id);
-      if (index === -1) {
-        return res.status(404).json({ error: `Product with id ${id} not found` });
-      }
-  
-      const product = products[index];
 
-      const updatedProduct = {
-        ...product,
-        ...updates,
-        size: {
-          ...product.size,
-          ...(updates.size || {})
-        }
-      };
-  
-      products[index] = updatedProduct;
-  
-      await writeFile(dbPath, JSON.stringify({ ...db, products }, null, 2), 'utf-8');
-  
-      let updatedFieldValue;
-      if (updates.size) {
-        const key = Object.keys(updates.size)[0];
-        updatedFieldValue = updatedProduct.size[key];
-      } else {
-        const key = Object.keys(updates)[0];
-        updatedFieldValue = updatedProduct[key];
-      }
-  
-      return res.json(updatedFieldValue);
-    } catch (err) {
-      console.error('Patch product error:', err);
-      return res.status(500).json({ error: 'Failed to patch product' });
+    res.json(item.comments || []);
+  } catch (err) {
+    console.error('Read comments by id error:', err);
+    res.status(500).json({ error: 'Failed to read comments by id' });
+  }
+});
+app.patch('/products/:id', async (req, res) => {
+  const id = String(req.params.id);
+  const updates = req.body; // лише ті поля, які треба змінити
+
+  try {
+    const raw = await readFile(dbPath, 'utf-8');
+    const db = JSON.parse(raw);
+    const products = Array.isArray(db.products) ? db.products : [];
+
+    const index = products.findIndex((p) => String(p.id) === id);
+    if (index === -1) {
+      return res.status(404).json({ error: `Product with id ${id} not found` });
     }
-  });
-  
 
+    const product = products[index];
 
-  app.listen(PORT, () => {
-    console.log(`API running at http://localhost:${PORT}`);
-  });
+    const updatedProduct = {
+      ...product,
+      ...updates,
+      size: {
+        ...product.size,
+        ...(updates.size || {}),
+      },
+    };
+
+    products[index] = updatedProduct;
+
+    await writeFile(
+      dbPath,
+      JSON.stringify({ ...db, products }, null, 2),
+      'utf-8'
+    );
+
+    let updatedFieldValue;
+    if (updates.size) {
+      const key = Object.keys(updates.size)[0];
+      updatedFieldValue = updatedProduct.size[key];
+    } else {
+      const key = Object.keys(updates)[0];
+      updatedFieldValue = updatedProduct[key];
+    }
+
+    return res.json(updatedFieldValue);
+  } catch (err) {
+    console.error('Patch product error:', err);
+    return res.status(500).json({ error: 'Failed to patch product' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`API running at http://localhost:${PORT}`);
+});

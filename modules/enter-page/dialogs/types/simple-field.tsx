@@ -1,10 +1,10 @@
-import type { Product } from "../schema/product-schema";
-import { Path } from "react-hook-form";
+import type { InfetSchema } from '../schema/product-schema';
+import { Path } from 'react-hook-form';
 
 export type SimpleField = {
-  name: Path<Product>;
+  name: Path<InfetSchema>;
   label: string;
   placeholder?: string;
-  type: "text" | "url" | "number";
+  type: 'text' | 'url' | 'number';
   description?: string;
 };

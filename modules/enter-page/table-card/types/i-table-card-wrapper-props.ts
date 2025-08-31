@@ -1,4 +1,4 @@
-export interface ITableCardWrapperProps { 
+export interface ITableCardWrapperProps {
   id: string | number;
   name: string;
   count: number;

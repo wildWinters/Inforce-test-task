@@ -1,4 +1,4 @@
-import { invoiceStatusType } from './invoice-status-type';
+import { invoiceStatusType } from './t-invoice-status-type';
 export interface Invoice {
   id: string;
   status: invoiceStatusType;

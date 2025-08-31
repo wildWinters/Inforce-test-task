@@ -1,20 +1,20 @@
-"use client";
-import { 
+'use client';
+import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/shared/shad-cn/card";
-import { Button } from "@/shared/shad-cn/button";
-import { Textarea } from "@/shared/shad-cn/textarea";
-import { kyInstance } from "@/shared/lib/ky";
-import { Pen, Trash2, Triangle, View } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
-import { cn } from "@/shared/lib/utils";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ITableCardWrapperProps } from "./types/i-table-card-wrapper-props";
+} from '@/shared/shad-cn/card';
+import { Button } from '@/shared/shad-cn/button';
+import { Textarea } from '@/shared/shad-cn/textarea';
+import { kyInstance } from '@/shared/lib/ky';
+import { Pen, Trash2, Triangle, View } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { cn } from '@/shared/lib/utils';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { ITableCardWrapperProps } from './types/i-table-card-wrapper-props';
 
 export function TableCardWrapper({
   id,
@@ -24,19 +24,19 @@ export function TableCardWrapper({
   weight,
 }: ITableCardWrapperProps) {
   const queryClient = useQueryClient();
-  const tanstackKey = "comments";
+  const TANSTACK_KEY = 'comments';
 
   const { data } = useQuery({
-    queryKey: [tanstackKey, id],
+    queryKey: [TANSTACK_KEY, id],
     queryFn: () => kyInstance.get(`comments/${id}`).json(),
   });
 
-  const [activateMode, setActivateMode] = useState<"on" | "off">("off");
+  const [activateMode, setActivateMode] = useState<'on' | 'off'>('off');
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const mode = activateMode === "on" ? "Edit mode" : "View mode";
+  const mode = activateMode === 'on' ? 'Edit mode' : 'View mode';
   const sign =
-    activateMode === "on" ? (
+    activateMode === 'on' ? (
       <Pen className="w-5 h-5 text-red-500 cursor-pointer hover:text-red-700 transition-colors" />
     ) : (
       <View className="w-5 h-5 text-blue-500 cursor-pointer hover:text-blue-700 transition-colors" />
@@ -44,43 +44,76 @@ export function TableCardWrapper({
 
   const handleDeleteComment = (id: string | number, index: number) => {
     kyInstance.delete(`comments/${id}/${index}`).then(() => {
-      queryClient.invalidateQueries({ queryKey: [tanstackKey, id] });
+      queryClient.invalidateQueries({ queryKey: [TANSTACK_KEY, id] });
     });
   };
 
-  const updateCommentsButtonClick = (id: string | number, userComment: string) => {
+  const updateCommentsButtonClick = (
+    id: string | number,
+    userComment: string
+  ) => {
     if (!userComment.trim()) return;
-    kyInstance.post("comments", {
-      json: { id, comment: userComment, date: new Date().toISOString() },
-    }).then(() => {
-      if (textAreaRef.current) textAreaRef.current.value = "";
-      queryClient.invalidateQueries({ queryKey: [tanstackKey, id] });
-    });
+    kyInstance
+      .post('comments', {
+        json: { id, comment: userComment, date: new Date().toISOString() },
+      })
+      .then(() => {
+        if (textAreaRef.current) textAreaRef.current.value = '';
+        queryClient.invalidateQueries({ queryKey: [TANSTACK_KEY, id] });
+      });
   };
 
   return (
     <Card className="w-full max-w-sm shadow-lg rounded-xl border border-gray-200 overflow-hidden hover:shadow-2xl transition-shadow duration-300">
       <CardHeader className="bg-gray-50 px-4 py-3 flex flex-col gap-2">
         <div
-          onClick={() => setActivateMode(activateMode === "on" ? "off" : "on")}
+          onClick={() => setActivateMode(activateMode === 'on' ? 'off' : 'on')}
           className={cn(
-            "flex mx-auto items-center justify-center gap-2 cursor-pointer select-none font-semibold",
-            activateMode === "on" ? "text-red-600" : "text-blue-600"
+            'flex mx-auto items-center justify-center gap-2 cursor-pointer select-none font-semibold',
+            activateMode === 'on' ? 'text-red-600' : 'text-blue-600'
           )}
         >
           {mode} {sign}
         </div>
-        <CardTitle className="mx-auto text-lg font-bold text-center">{name}</CardTitle>
+        <CardTitle className="mx-auto text-lg font-bold text-center">
+          {name}
+        </CardTitle>
         <CardDescription
           className={cn(
-            "mt-2 mx-auto flex justify-between text-sm text-gray-600 gap-2 flex-wrap",
-            activateMode === "on" ? "flex-col items-center justify-center w-full" : "flex items-center justify-center"
+            'mt-2 mx-auto flex justify-between text-sm text-gray-600 gap-2 flex-wrap',
+            activateMode === 'on'
+              ? 'flex-col items-center justify-center w-full'
+              : 'flex items-center justify-center'
           )}
         >
-          <RespondProductData id={id} label="Count" value={count} editMode={activateMode === "on"} field="count" />
-          <RespondProductData id={id} label="Width" value={size.width} editMode={activateMode === "on"} field="width" />
-          <RespondProductData id={id} label="Height" value={size.height} editMode={activateMode === "on"} field="height" />
-          <RespondProductData id={id} label="Weight" value={weight} editMode={activateMode === "on"} field="weight" />
+          <RespondProductData
+            id={id}
+            label="Count"
+            value={count}
+            editMode={activateMode === 'on'}
+            field="count"
+          />
+          <RespondProductData
+            id={id}
+            label="Width"
+            value={size.width}
+            editMode={activateMode === 'on'}
+            field="width"
+          />
+          <RespondProductData
+            id={id}
+            label="Height"
+            value={size.height}
+            editMode={activateMode === 'on'}
+            field="height"
+          />
+          <RespondProductData
+            id={id}
+            label="Weight"
+            value={weight}
+            editMode={activateMode === 'on'}
+            field="weight"
+          />
         </CardDescription>
       </CardHeader>
 
@@ -111,7 +144,9 @@ export function TableCardWrapper({
         />
         <Button
           className="w-full"
-          onClick={() => updateCommentsButtonClick(id, textAreaRef.current?.value || "")}
+          onClick={() =>
+            updateCommentsButtonClick(id, textAreaRef.current?.value || '')
+          }
         >
           Add Comment
         </Button>
@@ -131,26 +166,25 @@ export function RespondProductData({
   label: string;
   value: number;
   editMode: boolean;
-  field: "count" | "width" | "height" | "weight";
+  field: 'count' | 'width' | 'height' | 'weight';
 }) {
   const queryClient = useQueryClient();
   const [data, setData] = useState<number>(value);
 
- 
   useEffect(() => {
     setData(value);
   }, [value]);
 
   const handleUpdateBackend = (newValue: number) => {
     let payload: any = {};
-    if (field === "width" || field === "height") {
+    if (field === 'width' || field === 'height') {
       payload = { size: { [field]: newValue } };
     } else {
       payload = { [field]: newValue };
     }
 
     kyInstance.patch(`products/${id}`, { json: payload }).then(() => {
-      queryClient.invalidateQueries({ queryKey: ["products"] }); 
+      queryClient.invalidateQueries({ queryKey: ['products'] });
     });
 
     setData(newValue);
@@ -166,8 +200,16 @@ export function RespondProductData({
       </span>
       {editMode && (
         <div className="flex flex-col gap-1 items-center cursor-pointer justify-center">
-          <Triangle size={16} className="text-gray-500 hover:text-gray-700 transition-colors" onClick={handleIncrement} />
-          <Triangle size={16} className="rotate-180 text-gray-500 hover:text-gray-700 transition-colors" onClick={handleDecrement} />
+          <Triangle
+            size={16}
+            className="text-gray-500 hover:text-gray-700 transition-colors"
+            onClick={handleIncrement}
+          />
+          <Triangle
+            size={16}
+            className="rotate-180 text-gray-500 hover:text-gray-700 transition-colors"
+            onClick={handleDecrement}
+          />
         </div>
       )}
     </div>

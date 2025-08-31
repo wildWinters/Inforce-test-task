@@ -1,1 +1,1 @@
-export const tanstackKey = "products";
+export const TANSTACK_KEY = 'products';

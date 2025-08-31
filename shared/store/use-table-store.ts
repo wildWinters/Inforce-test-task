@@ -6,8 +6,8 @@ import { IComments } from './store-types';
 
 export interface IUseTableStore {
   tableRenderData: TProduct[] | null;
-  comment: IComments | null; 
-  setComment: (comment: IComments) => void; 
+  comment: IComments | null;
+  setComment: (comment: IComments) => void;
   updateTableRenderData: (tableData: TProduct[]) => void;
 }
 
@@ -25,7 +25,7 @@ export const useTableStore = create<IUseTableStore>()(
 
       setComment: (comment: IComments) => {
         set((state) => {
-          state.comment = comment; 
+          state.comment = comment;
         });
       },
     }))

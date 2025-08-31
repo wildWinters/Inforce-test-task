@@ -93,19 +93,13 @@
       "weight": 4
     },
     {
-      "id": [
-        "d",
-        "5",
-        "a",
-        "7",
-        "a"
-      ],
+      "id": ["d", "5", "a", "7", "a"],
       "imageUrl": "https:// hello world1",
       "name": "xwedwe",
-      "count": 1,
+      "count": 10,
       "size": {
-        "width": 2,
-        "height": 3
+        "width": 11,
+        "height": 7
       },
       "weight": 4
     },
@@ -146,16 +140,12 @@
   "comments": [
     {
       "id": "3",
-      "comments": [
-        "Fresh and tasty apples!"
-      ],
+      "comments": ["Fresh and tasty apples!"],
       "date": "2025-08-28T14:15:32.603Z"
     },
     {
       "id": "4",
-      "comments": [
-        "Great for pies."
-      ],
+      "comments": ["Great for pies."],
       "date": "2025-08-28T14:22:43.043Z"
     },
     {
@@ -165,33 +155,28 @@
     },
     {
       "id": "6",
-      "comments": [
-        "Fresh and tasty apples!",
-        "Great for pies."
-      ],
+      "comments": ["Fresh and tasty apples!", "Great for pies."],
       "date": "12:45 25.08.2021"
     },
     {
       "id": "7",
-      "comments": [
-        "Fresh and tasty apples!",
-        "Great for pies."
-      ],
+      "comments": ["Fresh and tasty apples!", "Great for pies."],
       "date": "09:20 26.08.2021"
     },
     {
       "id": "8",
-      "comments": [
-        "Great for pies."
-      ],
+      "comments": ["Great for pies."],
       "date": "2025-08-29T09:19:00.368Z"
     },
     {
       "id": "10",
-      "comments": [
-        "hello world"
-      ],
+      "comments": ["hello world"],
       "date": "2025-08-29T01:52:04.560Z"
+    },
+    {
+      "id": "d,5,a,7,a",
+      "comments": ["hello world", "Uchiha madara "],
+      "date": "2025-08-30T20:39:39.028Z"
     }
   ]
 }

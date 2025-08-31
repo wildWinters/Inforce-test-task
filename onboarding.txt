@@ -23,7 +23,7 @@ Git
   all-pages
   page/name-from-figma
 
-frontend/    
+Project Architecture:  
   modules/
     page-name/
       section-of-widgets-ui-name/       # Folder for a specific section (optional)

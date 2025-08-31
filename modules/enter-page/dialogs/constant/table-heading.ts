@@ -1,1 +1,6 @@
-export const tableHeading:string[] = ["Invoice", "Status", "Method", "Amount"];
+export const TABLE_HEADING: string[] = [
+  'Invoice',
+  'Status',
+  'Method',
+  'Amount',
+];

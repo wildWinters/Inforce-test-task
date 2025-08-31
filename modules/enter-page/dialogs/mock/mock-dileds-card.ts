@@ -1,20 +1,49 @@
-import { Path } from "react-hook-form";
-import { TProduct } from "../../table/types/t-product";
+import { Path } from 'react-hook-form';
+import { TProduct } from '../../table/types/t-product';
 
 type SimpleField = {
   name: Path<TProduct>;
   label: string;
   placeholder?: string;
-  type: "text" | "url" | "number";
+  type: 'text' | 'url' | 'number';
   description?: string;
 };
-  
+
 export const fields: SimpleField[] = [
-  // { name: "id", label: "ID", placeholder: "product-1", type: "text",},
-  { name: "imageUrl", label: "Image URL", placeholder: "https://...", type: "url",  },
-  { name: "name", label: "Name", placeholder: "Product name", type: "text", },
-  { name: "count", label: "Count", placeholder: "0", type: "number" },
-  { name: "size.width", label: "Width", placeholder: "1", type: "number", },
-  { name: "size.height", label: "Height", placeholder: "1", type: "number", },
-  { name: "weight", label: "Weight", placeholder: "1", type: "number", },
+  {
+    name: 'imageUrl',
+    label: 'Image URL',
+    placeholder: 'https://...',
+    type: 'url',
+  },
+  {
+    name: 'name',
+    label: 'Name',
+    placeholder: 'Product name',
+    type: 'text',
+  },
+  {
+    name: 'count',
+    label: 'Count',
+    placeholder: '0',
+    type: 'number',
+  },
+  {
+    name: 'size.width',
+    label: 'Width',
+    placeholder: '1',
+    type: 'number',
+  },
+  {
+    name: 'size.height',
+    label: 'Height',
+    placeholder: '1',
+    type: 'number',
+  },
+  {
+    name: 'weight',
+    label: 'Weight',
+    placeholder: '1',
+    type: 'number',
+  },
 ];
